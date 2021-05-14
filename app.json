@@ -1,0 +1,12 @@
+{
+  "name": "onelife",
+  "displayName": "onelife",
+  "expo": {
+    "name": "onelife",
+    "slug": "onelife",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
