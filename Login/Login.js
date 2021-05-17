@@ -29,11 +29,12 @@ export default class Login extends Component {
 
   loginVerif = () => {
     Keyboard.dismiss();
-    if(this.state.username == "Theo" && this.state.password == "Theo"){
+    this.props.navigation.navigate('menu');
+    /*if(this.state.username == "Theo" && this.state.password == "Theo"){
         this.props.navigation.navigate('menu');
     }else{
       this.setState({passIncorrect:true});
-    }
+    }*/
   }
 
   render(){
