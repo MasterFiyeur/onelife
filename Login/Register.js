@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, Dimensions, TextInput, Image, TouchableOpacity, Keyboard } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 import logo from '../images/logoAlpha.png';
 
@@ -10,6 +11,7 @@ const { width: WIDTH } = Dimensions.get('window');
 export default class Register extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       showPass: true,
       press: false,
@@ -34,7 +36,6 @@ export default class Register extends Component {
 
   render(){
   return (
-    
     <LinearGradient colors={['#FF00FF', '#AA00FF' ]} style={styles.backgroundContainer}>
       <View >
           <TouchableOpacity style={styles.backChevron} onPress={() => {this.props.navigation.navigate('login');}}>
@@ -56,6 +57,15 @@ export default class Register extends Component {
             placeholderTextColor={'rgba(255,255,255,0.7)'}
             underlineColorAndroid='transparent'/>
             <Icon name='person-circle-outline' size={28} color='rgba(255,255,255,0.7)' style={styles.inputIcon}></Icon>
+        </View>
+        <View style={styles.inputContainer}>
+        {/*<DateTimePicker
+          testID="dateTimePicker"
+          mode="date"
+          value={this.state.date}
+          display="default"
+          onChange={this.onChange.bind(this)}
+        />*/}
         </View>
         <View style={styles.inputContainer}>
           <TextInput onChangeText={(text)=>{this.setState({password:text});}}
