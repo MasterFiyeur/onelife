@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, Dimensions, TextInput, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, TextInput, Image, TouchableOpacity, Keyboard } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -28,6 +28,7 @@ export default class Login extends Component {
   }
 
   loginVerif = () => {
+    Keyboard.dismiss();
     if(this.state.username == "Theo" && this.state.password == "Theo"){
         this.props.navigation.navigate('menu');
     }else{
@@ -51,11 +52,11 @@ export default class Login extends Component {
           onChangeText={(text)=>{this.setState({username:text});}}
           defaultValue={this.state.username}
           style={styles.input}
-          placeholder={"Nom d'utilisateur"}
+          placeholder={"Adresse mail"}
           placeholderTextColor={'rgba(255,255,255,0.7)'}
           underlineColorAndroid='transparent'/>
           <Icon 
-            name='person-circle-outline' 
+            name='mail' 
             size={28} 
             color='rgba(255,255,255,0.7)' 
             style={styles.inputIcon}></Icon>
@@ -90,7 +91,7 @@ export default class Login extends Component {
       </TouchableOpacity>
       <TouchableOpacity 
       style={styles.btnReg}
-      onPress={() => {console.log("register");}}>
+      onPress={() => {this.props.navigation.navigate('register');}}>
         <Text style={styles.text}>S'enregistrer</Text>
       </TouchableOpacity>
     </LinearGradient>
