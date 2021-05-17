@@ -12,13 +12,33 @@ export default class Register extends Component {
   constructor(props) {
     super(props);
 
+    var dateMax = new Date(); 
+    dateMax.setFullYear(dateMax.getFullYear() - 18);
     this.state = {
       showPass: true,
       press: false,
       username:"",
       password:"",
-      passConf:""
+      passConf:"",
+      date: new Date("2000-01-01"),
+      dateMax:dateMax,
+      dateText:"01/01/2000",
+      show: false,
+      validMail:true,
+      validDate:true,
+      validMDP:true,
     };
+  }
+
+  changeDate = (event, date) => {
+    if(event.type=="set"){
+      let text = ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + date.getFullYear();
+      this.setState({
+        date:date,
+        show:false,
+        dateText: text
+      });
+    }
   }
 
   showPass = () => {
@@ -30,8 +50,30 @@ export default class Register extends Component {
   }
 
   registerVerif = () => {
+    let valid = true;
     Keyboard.dismiss();
-    alert("tkt200");
+    if(this.state.password != this.state.passConf || this.state.password.length < 8){
+      valid= false;
+      this.setState({validMDP:false});
+    }else{
+      this.setState({validMDP:true});
+    }
+    if(this.state.date>=this.state.dateMax || this.state.date<=new Date(1950,0,1)){
+      valid = false;
+      this.setState({validDate:false});
+    }else{
+      this.setState({validDate:true});
+    }
+    let regex = /\S+@\S+\.\S+/;
+    if(!regex.test(String(this.state.username).toLowerCase())){
+        valid=false;
+        this.setState({validMail:false});
+    }else{
+      this.setState({validMail:true});
+    }
+    if(valid){
+      alert("registered");
+    }
   }
 
   render(){
@@ -46,32 +88,32 @@ export default class Register extends Component {
         <View style={styles.logoContainer}>
           <Image source={logo} style={styles.logo} />
         </View>
-        <View style={this.state.passIncorrect?{display:'flex'}:{display:'none'}}>
-          <Text>Mot de passe incorrect.</Text>
-        </View>
         <View style={styles.inputContainer}>
           <TextInput onChangeText={(text)=>{this.setState({username:text});}}
             defaultValue={this.state.username}
-            style={styles.input}
+            style={[styles.input,!this.state.validMail?{borderColor: "red",borderWidth: 1}:""]}
             placeholder={"Adresse mail"}
             placeholderTextColor={'rgba(255,255,255,0.7)'}
             underlineColorAndroid='transparent'/>
             <Icon name='person-circle-outline' size={28} color='rgba(255,255,255,0.7)' style={styles.inputIcon}></Icon>
         </View>
-        <View style={styles.inputContainer}>
-        {/*<DateTimePicker
-          testID="dateTimePicker"
-          mode="date"
-          value={this.state.date}
-          display="default"
-          onChange={this.onChange.bind(this)}
-        />*/}
-        </View>
+        <TouchableOpacity style={{marginBottom:10}} onPress={()=>{this.setState({show:true})}}>
+            {this.state.show && <DateTimePicker
+              mode="date"
+              value={this.state.date}
+              minimumDate={new Date(1950,0,1)}
+              onChange={this.changeDate.bind(this)}
+              maximumDate={this.state.dateMax}
+            />}
+            <Text style={[styles.inputDate,,!this.state.validDate?{borderColor: "red",borderWidth: 1}:""]}>
+              {this.state.dateText}
+            </Text>
+        </TouchableOpacity>
         <View style={styles.inputContainer}>
           <TextInput onChangeText={(text)=>{this.setState({password:text});}}
             defaultValue={this.state.password}
-            style={styles.input}
-            placeholder={"Mot de passe"}
+            style={[styles.input,!this.state.validMDP?{borderColor: "red",borderWidth: 1}:""]}
+            placeholder={"Mot de passe (8 caractères)"}
             secureTextEntry={this.state.showPass}
             placeholderTextColor={'rgba(255,255,255,0.7)'}
             underlineColorAndroid='transparent'/>
@@ -83,7 +125,7 @@ export default class Register extends Component {
         <View style={styles.inputContainer}>
           <TextInput onChangeText={(text)=>{this.setState({passConf:text});}}
             defaultValue={this.state.passConf}
-            style={styles.input}
+            style={[styles.input,!this.state.validMDP?{borderColor: "red",borderWidth: 1}:""]}
             placeholder={"Confirmation mot de passe"}
             secureTextEntry={this.state.showPass}
             placeholderTextColor={'rgba(255,255,255,0.7)'}
@@ -140,6 +182,17 @@ const styles = StyleSheet.create({
     backgroundColor:'rgba(0,0,0,0.35)',
     color:'rgba(255,255,255,0.7)',
     marginHorizontal: 25,
+  },
+  inputDate:{
+    width: WIDTH - 55,
+    height: 45,
+    borderRadius: 45,
+    fontSize: 18,
+    backgroundColor:'rgba(0,0,0,0.35)',
+    color:'rgba(255,255,255,0.7)',
+    marginHorizontal: 25,
+    textAlign: "center",
+    paddingTop: 10
   },
   inputIcon:{
     position:'absolute',
