@@ -17,7 +17,9 @@ export default class Menu extends Component {
       colors={['#FF00FF', '#AA00FF']}
       style={styles.backgroundContainer}>
       <View style={styles.topContainer}>
-        <TouchableOpacity style={styles.inputIcon}>
+        <TouchableOpacity
+            style={styles.inputIcon}
+            onPress={() => {this.props.navigation.navigate('login');}}>
           <Icon 
             name='log-out-outline' 
             size={30} 
