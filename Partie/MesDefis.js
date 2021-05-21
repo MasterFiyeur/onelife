@@ -162,16 +162,18 @@ export default class MesDefis extends Component {
         ];
         return defis.map((defi) => {
             return (
-                <View style={styles.defi}>
-                    <Text style={styles.label}>{defi.label}</Text>
-                    <View style={styles.info}>
-                        <Icon 
-                            name={defi.did?'checkmark-circle-outline':'close-circle-outline'}
-                            size={30}
-                            color={defi.did?'lime':'red'}></Icon>
-                        <Text>{defi.points} pts</Text>
+                <TouchableOpacity>
+                    <View style={styles.defi}>
+                        <Text style={styles.label}>{defi.label}</Text>
+                        <View style={styles.info}>
+                            <Icon 
+                                name={defi.did?'checkmark-circle-outline':'close-circle-outline'}
+                                size={30}
+                                color={defi.did?'lime':'red'}></Icon>
+                            <Text>{defi.points} pts</Text>
+                        </View>
                     </View>
-                </View>
+                </TouchableOpacity>
             );
         });
       }
