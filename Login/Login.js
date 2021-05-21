@@ -42,6 +42,8 @@ export default class Login extends Component {
     <LinearGradient
     colors={['#FF00FF', '#AA00FF']}
     style={styles.backgroundContainer}>
+      <View style={styles.rond}></View>
+      <View style={styles.rond2}></View>
       <View style={styles.logoContainer}>
         <Image source={logo} style={styles.logo}/>
       </View>
@@ -157,5 +159,23 @@ const styles = StyleSheet.create({
     color:'rgba(255,255,255,0.7)',
     textAlign: 'center',
     fontSize: 16
+  },
+  rond:{
+    backgroundColor: '#FF00FE',
+    position: 'absolute',
+    height: 500,
+    width: 500,
+    bottom: -30,
+    right: -200,
+    borderRadius: 500,
+  },
+  rond2:{
+    backgroundColor: '#BE00FF',
+    position: 'absolute',
+    height: 200,
+    width: 200,
+    top: -20,
+    left: -10,
+    borderRadius: 500,
   }
 });

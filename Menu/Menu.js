@@ -34,7 +34,8 @@ export default class Menu extends Component {
       </View>
       <View style={styles.centerContainer}>
         <TouchableOpacity 
-          style={styles.btn}>
+          style={styles.btn}
+          onPress={()=>{this.props.navigation.navigate('home')}}>
           <Text style={styles.text}>Créer une partie</Text>
         </TouchableOpacity>
         <View style={styles.join}>
