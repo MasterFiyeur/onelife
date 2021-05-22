@@ -167,8 +167,6 @@ export default class MesDefis extends Component {
     }
 
     renderDefi = () => {
-        
-
         return this.state.defis.map((defi) => {
             return (
                 <TouchableOpacity key={this.state.defis.indexOf(defi)}>

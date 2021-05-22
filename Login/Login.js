@@ -73,14 +73,14 @@ export default class Login extends Component {
           secureTextEntry={this.state.showPass}
           placeholderTextColor={'rgba(255,255,255,0.7)'}
           underlineColorAndroid='transparent'/>
-          <Icon 
+          <Icon
             name='lock-closed' 
             size={26} 
             color='rgba(255,255,255,0.7)' 
             style={styles.inputIcon}></Icon>
         <TouchableOpacity style={styles.inputIcon2}
           onPress={this.showPass.bind(this)}>
-          <Icon 
+          <Icon
             name={this.state.press == false ? 'eye' : 'eye-off'}
             size={26} 
             color='rgba(255,255,255,0.7)'

@@ -11,6 +11,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import MesDefis from './Partie/MesDefis';
 import Classement from './Partie/Classement';
 import Validation from './Partie/Validation';
+import SplashScreen from './Login/SplashScreen';
 
 const Stack = createStackNavigator();
 
@@ -21,6 +22,10 @@ export default class App extends Component {
       <Stack.Navigator 
       screenOptions={{headerShown: false}}
       initialRouteName="login">
+        <Stack.Screen
+          name="splash"
+          component={SplashScreen}
+        />
         <Stack.Screen
           name="login"
           component={Login}
