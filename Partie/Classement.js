@@ -1,26 +1,87 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class Classement extends Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        joueur: []
+      };
+    }
+
+    componentDidMount(){
+      const tab=[
+        {
+          nom:"Maxime",
+          points:1230
+        },{
+          nom:"Théo",
+          points:1180
+        },{
+          nom:"Matys",
+          points:1170
+        },{
+          nom:"Azyno",
+          points:970
+        },{
+          nom:"Loulou",
+          points:840
+        },{
+          nom:"Caillou",
+          points:710
+        }
+      ];
+      this.setState({
+        joueur:tab
+      });
+    }
+
+    renderTrophy = (place) => {
+      if(place>2){
+        return (<Text style={styles.place}>{place+1}</Text>);
+      }else{
+        return(
+          <Icon
+              style={styles.trophy}
+              name='trophy-outline'
+              size={30}
+              color={place==0?'goldenrod':(place==1?'silver':'brown')}></Icon>);
+      }
+    }
+
+    renderJoueur = () => {
+      return this.state.joueur.map((joueur) => {
+          return (
+            <TouchableOpacity key={this.state.joueur.indexOf(joueur)}>
+                <View style={styles.player}>
+                    {this.renderTrophy(this.state.joueur.indexOf(joueur))}
+                    <Text style={styles.label}>{joueur.nom}</Text>
+                    <Text style={styles.points}>{joueur.points} pts</Text>
+                </View>
+            </TouchableOpacity>
+          );
+      });
+    }
+
     render() {
         return (
             <LinearGradient
-            colors={['#FF9200', '#FFEB00']}
-            style={styles.backgroundContainer}>
+                colors={['#FF9200', '#FFEB00']}
+                style={styles.backgroundContainer}>
             <View style={styles.rond}></View>
             <View style={styles.rond2}></View>
             <View style={styles.topContainer}>
                 <TouchableOpacity
                     style={styles.inputIcon}
-                    onPress={() => {this.props.navigation.navigate('login');}}>
+                    onPress={() => {this.props.navigation.navigate('home');}}>
                 <Icon 
-                    name='log-out-outline' 
-                    size={30} 
+                    name='chevron-back' 
+                    size={30}
                     color='rgb(255,255,255)'></Icon>
                 </TouchableOpacity>
-                <Text style={{fontSize:16}}>Partie : #12345</Text>
+                <Text style={styles.title}>Classement</Text>
                 <TouchableOpacity style={styles.inputIcon}>
                 <Icon 
                     name='settings-outline' 
@@ -29,9 +90,13 @@ export default class Classement extends Component {
                 </TouchableOpacity>
             </View>
             <View style={styles.centerContainer}>
-                <Text>Classement</Text>
+                <ScrollView 
+                    contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
+                    style={styles.scrollView}>
+                  {this.renderJoueur()}
+                </ScrollView>
             </View>
-            <View style={styles.topContainer}></View>
+        <View style={styles.topContainer}></View>
         </LinearGradient>
         )
     }
@@ -73,6 +138,9 @@ const styles = StyleSheet.create({
       alignItems: "center",
       justifyContent: "space-between",
     },
+    scrollView:{
+      width: '100%'
+    },
     inputIcon :{
       padding: 15
     },
@@ -80,6 +148,44 @@ const styles = StyleSheet.create({
       width: '100%',
       flex:1,
       alignItems: "center",
-      justifyContent:"space-evenly"
+      justifyContent:"center"
+    },
+    title:{
+      fontSize: 26,
+      color: '#fff',
+      textShadowColor: "#000",
+      textShadowOffset: {width: 1, height: 1},
+      textShadowRadius: 1
+    },
+    player:{
+      backgroundColor: '#fff',
+      borderRadius: 10,
+      marginHorizontal: 15,
+      marginVertical: 5,
+      paddingVertical: 5,
+      minHeight: 65,
+      flex:1,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+  },
+    label:{
+        width: '60%',
+        marginLeft: 10,
+        textAlign: 'center',
+        fontSize: 26,
+        color: '#000'
+    },
+    trophy:{
+      marginLeft:10
+    },
+    points:{
+      marginRight: 10,
+      color:'#000'
+    },
+    place:{
+      paddingLeft:15,
+      fontSize:30,
+      color:'#000'
     }
 });

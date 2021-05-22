@@ -8,16 +8,12 @@ export default class MesDefis extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          defis: true,
+          defis: [],
           total: 0
         };
     }
 
     componentDidMount = () => {
-        
-    }
-
-    renderDefi = () => {
         const defis = [
             {
                 label: "Avoir le snap/insta d'une meuf",
@@ -160,9 +156,22 @@ export default class MesDefis extends Component {
                 did: true
             }
         ];
-        return defis.map((defi) => {
+        let compt = 0;
+        defis.forEach(element => {
+            compt += element.did?element.points:0;
+        });
+        this.setState({
+            defis:defis,
+            total:compt
+        })
+    }
+
+    renderDefi = () => {
+        
+
+        return this.state.defis.map((defi) => {
             return (
-                <TouchableOpacity>
+                <TouchableOpacity key={this.state.defis.indexOf(defi)}>
                     <View style={styles.defi}>
                         <Text style={styles.label}>{defi.label}</Text>
                         <View style={styles.info}>
@@ -176,10 +185,10 @@ export default class MesDefis extends Component {
                 </TouchableOpacity>
             );
         });
-      }
+    }
 
-    render() {
-        return (
+    render(){
+        return(
             <LinearGradient
             colors={['#FF9200', '#FFEB00']}
             style={styles.backgroundContainer}>
@@ -208,7 +217,7 @@ export default class MesDefis extends Component {
                 </ScrollView>
             </View>
             <View style={styles.botContainer}>
-                <Text style={styles.total}>Total : 250 pts</Text>
+                <Text style={styles.total}>Total : {this.state.total} pts</Text>
             </View>
         </LinearGradient>
         )
