@@ -4,6 +4,61 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class Validation extends Component {
+    constructor(props) {
+      super(props);
+      this.state = {
+        defis: []
+      };
+    }
+
+    componentDidMount(){
+      const defis = [
+        {
+          joueur:'Matys',
+          defi:"Revoir une meuf le lendemain d'une soirée où t'étais totalement arraché"
+        },{
+          joueur:'Théo',
+          defi:"S'inventer une vie pour pécho une meuf"
+        },{
+          joueur:'Maxime',
+          defi:"Courir à poil sur 100m"
+        }
+      ];
+      this.setState({
+        defis: defis
+      });
+    }
+
+    renderValidation = () => {
+      if(this.state.defis.length == 0){
+        return(<Text style={styles.nothing}>Il n'y a aucun défi à valider</Text>);
+      }
+      return this.state.defis.map((validation) => {
+          return (
+            <View style={styles.valid} key={this.state.defis.indexOf(validation)}>
+                      <TouchableOpacity style={styles.react}>
+                          <Icon 
+                              name='checkbox' 
+                              size={25}
+                              color='lime'></Icon>
+                              <Text style={styles.actionName}>Accepter</Text>
+                      </TouchableOpacity>
+                      <View style={styles.infos}>
+                          <Text style={styles.defi}>{validation.defi}</Text>
+                          <Text style={styles.nom}>{validation.joueur}</Text>
+                      </View>
+                      <TouchableOpacity style={styles.react}>
+                          <Icon 
+                              name='hand-left' 
+                              size={25}
+                              color='red'></Icon>
+                            <Text style={styles.actionName}>Refuser</Text>
+                      </TouchableOpacity>
+                  </View>
+          );
+      });
+    }
+    
     render() {
         return (
           <LinearGradient
@@ -29,8 +84,10 @@ export default class Validation extends Component {
               </TouchableOpacity>
           </View>
           <View style={styles.centerContainer}>
-              <ScrollView style={{width:'100%'}}>
-
+              <ScrollView 
+                  contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
+                  style={styles.scrollView}>
+                  {this.renderValidation()}
               </ScrollView>
           </View>
           <View style={styles.botContainer}>
@@ -91,5 +148,45 @@ const styles = StyleSheet.create({
       flex:1,
       alignItems: "center",
       justifyContent:"space-evenly"
+    },
+    scrollView:{
+      width: '100%'
+    },
+    valid:{
+      backgroundColor: '#fff',
+      borderRadius: 10,
+      marginHorizontal: 15,
+      marginVertical: 5,
+      paddingVertical: 5,
+      minHeight: 65,
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    },
+    infos:{
+        width: '60%',
+        textAlign: 'center'
+    },
+    react:{
+      paddingHorizontal:10,
+      justifyContent: 'center',
+      alignItems:'center',
+      width:'20%',
+    },
+    actionName:{
+      fontSize:13
+    },
+    nom:{
+      fontSize:13,
+      textAlign: 'center'
+    },
+    defi:{
+      textAlign: 'center',
+      color:'#000',
+    },
+    nothing:{
+      textAlign: 'center',
+      fontSize: 26,
+      color: '#fff',
     }
 });
