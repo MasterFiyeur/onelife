@@ -1,37 +1,40 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 export default class Validation extends Component {
     render() {
         return (
-            <LinearGradient
-            colors={['#FF9200', '#FFEB00']}
-            style={styles.backgroundContainer}>
-            <View style={styles.rond}></View>
-            <View style={styles.rond2}></View>
-            <View style={styles.topContainer}>
-                <TouchableOpacity
-                    style={styles.inputIcon}
-                    onPress={() => {this.props.navigation.navigate('login');}}>
-                <Icon 
-                    name='log-out-outline' 
-                    size={30} 
-                    color='rgb(255,255,255)'></Icon>
-                </TouchableOpacity>
-                <Text style={{fontSize:16}}>Partie : #12345</Text>
-                <TouchableOpacity style={styles.inputIcon}>
-                <Icon 
-                    name='settings-outline' 
-                    size={30} 
-                    color='rgb(255,255,255)'></Icon>
-                </TouchableOpacity>
-            </View>
-            <View style={styles.centerContainer}>
-                <Text>Validation</Text>
-            </View>
-            <View style={styles.topContainer}></View>
+          <LinearGradient
+          colors={['#FF9200', '#FFEB00']}
+          style={styles.backgroundContainer}>
+          <View style={styles.rond}></View>
+          <View style={styles.rond2}></View>
+          <View style={styles.topContainer}>
+              <TouchableOpacity
+                  style={styles.inputIcon}
+                  onPress={() => {this.props.navigation.navigate('home');}}>
+              <Icon 
+                  name='chevron-back' 
+                  size={30}
+                  color='rgb(255,255,255)'></Icon>
+              </TouchableOpacity>
+              <Text style={styles.title}>Validation</Text>
+              <TouchableOpacity style={styles.inputIcon}>
+              <Icon 
+                  name='settings-outline' 
+                  size={30} 
+                  color='rgb(255,255,255)'></Icon>
+              </TouchableOpacity>
+          </View>
+          <View style={styles.centerContainer}>
+              <ScrollView style={{width:'100%'}}>
+
+              </ScrollView>
+          </View>
+          <View style={styles.botContainer}>
+          </View>
         </LinearGradient>
         )
     }
@@ -75,6 +78,13 @@ const styles = StyleSheet.create({
     },
     inputIcon :{
       padding: 15
+    },
+    title:{
+        fontSize: 26,
+        color: '#fff',
+        textShadowColor: "#000",
+        textShadowOffset: {width: 1, height: 1},
+        textShadowRadius: 1
     },
     centerContainer:{
       width: '100%',
