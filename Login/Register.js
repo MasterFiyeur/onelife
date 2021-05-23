@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Dimensions, TextInput, Image, TouchableOpacity,
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import auth from '@react-native-firebase/auth';
 
 import logo from '../images/logoAlpha.png';
 
@@ -28,6 +29,7 @@ export default class Register extends Component {
       validMail:true,
       validDate:true,
       validMDP:true,
+      errorMsg: "",
     };
   }
 
@@ -53,15 +55,21 @@ export default class Register extends Component {
   registerVerif = () => {
     let valid = true;
     Keyboard.dismiss();
-    if(this.state.password != this.state.passConf || this.state.password.length < 8){
+    if(this.state.password != this.state.passConf){
       valid= false;
       this.setState({validMDP:false});
+      this.setState({errorMsg:"Les mots de passe ne correspondent pas !"});
+    }else if(this.state.password.length < 8){
+      valid= false;
+      this.setState({validMDP:false});
+      this.setState({errorMsg:"Mot de passe inférieur à 8 caractères !"});
     }else{
       this.setState({validMDP:true});
     }
     if(this.state.date>=this.state.dateMax || this.state.date<=new Date(1950,0,1)){
       valid = false;
       this.setState({validDate:false});
+      this.setState({errorMsg:"Vous devez avoir au moins 18 ans !"});
     }else{
       this.setState({validDate:true});
     }
@@ -69,11 +77,26 @@ export default class Register extends Component {
     if(!regex.test(String(this.state.username).toLowerCase())){
         valid=false;
         this.setState({validMail:false});
+        this.setState({errorMsg:"Adresse email invalide !"});
     }else{
       this.setState({validMail:true});
     }
     if(valid){
-      alert("registered");
+      auth()
+      .createUserWithEmailAndPassword(this.state.username, this.state.password)
+      .then(() => {
+        console.log('Utilisateur enregistré et authentifié !');
+      })
+      .catch(error => {
+        if (error.code === 'auth/email-already-in-use') {
+          this.setState({errorMsg:"Adresse email déjà utilisé !"});
+        }else if (error.code === 'auth/invalid-email') {
+          this.setState({errorMsg:"Adresse email invalide !"});
+        }else{
+          this.setState({errorMsg:"Une erreur s'est produite !"});
+        }
+        console.log(error.code);
+      });
     }
   }
 
@@ -93,6 +116,7 @@ export default class Register extends Component {
           <View style={styles.logoContainer}>
             <Image source={logo} style={styles.logo} />
           </View>
+          {this.state.errorMsg != "" && <Text style={styles.errorMsg}>{this.state.errorMsg}</Text>}
           <View style={styles.inputContainer}>
             <TextInput onChangeText={(text)=>{this.setState({username:text});}}
               defaultValue={this.state.username}
