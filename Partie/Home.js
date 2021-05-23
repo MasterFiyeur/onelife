@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
+import auth from '@react-native-firebase/auth';
 
 
 /*
@@ -24,7 +25,7 @@ export default class Home extends Component {
             <View style={styles.topContainer}>
                 <TouchableOpacity
                     style={styles.inputIcon}
-                    onPress={() => {this.props.navigation.navigate('login');}}>
+                    onPress={() => {auth().signOut().then(()=>{console.log("User signed out !");});}}>
                 <Icon 
                     name='log-out-outline' 
                     size={30} 
