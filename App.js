@@ -1,13 +1,16 @@
 import 'react-native-gesture-handler';
 
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import auth from '@react-native-firebase/auth';
+//Follow this : https://rnfirebase.io/auth/usage
+
 import Login from './Login/Login';
 import Register from './Login/Register';
 import Menu from './Menu/Menu';
 import Home from './Partie/Home';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
 import MesDefis from './Partie/MesDefis';
 import Classement from './Partie/Classement';
 import Validation from './Partie/Validation';
@@ -15,8 +18,7 @@ import SplashScreen from './Login/SplashScreen';
 
 const Stack = createStackNavigator();
 
-export default class App extends Component {
-  render(){
+export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator 
@@ -56,5 +58,5 @@ export default class App extends Component {
         />
       </Stack.Navigator>
     </NavigationContainer>
-  );}
+  );
 }
