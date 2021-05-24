@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 import Login from '../Login/Login';
 import Register from '../Login/Register';
@@ -37,19 +38,11 @@ const AuthNavigation = () => {
     );
 };
 
-const AppNavigation = () => {
-    return(
+const ClassiqueNavigation = () => {
+  return(
     <Stack.Navigator 
       screenOptions={{headerShown: false}}
-      initialRouteName="menu">
-        <Stack.Screen
-          name="splash"
-          component={SplashScreen}
-        />
-        <Stack.Screen 
-          name="menu" 
-          component={Menu} 
-        />
+      initialRouteName="home">
         <Stack.Screen 
           name="home" 
           component={Home}
@@ -68,12 +61,38 @@ const AppNavigation = () => {
         />
     </Stack.Navigator>
     );
+}
+
+const CreateNavigation = () => {
+  return(
+    <Stack.Navigator 
+      screenOptions={{headerShown: false}}
+      initialRouteName="menu">
+        <Stack.Screen
+          name="splash"
+          component={SplashScreen}
+        />
+        <Stack.Screen 
+          name="menu" 
+          component={Menu} 
+        />
+    </Stack.Navigator>
+    );
+}
+
+const AppNavigation = (props) => {
+    return(
+      props.game ? 
+        <ClassiqueNavigation /> : 
+        <CreateNavigation />
+    );
 };
 
 export default function Navigation() {
 
     const [initializing, setInitializing] = useState(true);
     const [user, setUser] = useState();
+    const [game, setGame] = useState(null);
 
     function onAuthStateChanged(user) {
         setUser(user);
@@ -90,7 +109,7 @@ export default function Navigation() {
 
   return (
     <NavigationContainer>
-        {user ? <AppNavigation /> : <AuthNavigation />}
+        {user ? <AppNavigation game={game} /> : <AuthNavigation />}
     </NavigationContainer>
   );
 }

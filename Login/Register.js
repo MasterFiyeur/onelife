@@ -4,6 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 import logo from '../images/logoAlpha.png';
 
@@ -88,8 +89,24 @@ export default class Register extends Component {
     if(valid){
       auth()
       .createUserWithEmailAndPassword(this.state.username, this.state.password)
-      .then((userData) => {
+      .then(async (userData) => {
         console.log('Utilisateur enregistré et authentifié ! UID : '+userData.user.uid);
+        try{
+          await firestore().collection('users').doc(userData.user.uid).set({
+            name: null,
+            game: null,
+            todo: null,
+            did: null,
+            waiting: null
+          });
+        }catch(error){
+          console.log("Erreur lors de l'ajout de l'utilisateur à la base de donnée.");
+          auth().currentUser.delete().then(function() {
+            console.log("Utilisateur supprimé !");
+          }).catch(function(error) {
+            console.log("Erreur lors de la suppression de l'utilisateur !");
+          });
+        }
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {
