@@ -41,6 +41,10 @@ export default class Register extends Component {
         show:false,
         dateText: text
       });
+    }else{
+      this.setState({
+        show:false
+      });
     }
   }
 
@@ -84,8 +88,8 @@ export default class Register extends Component {
     if(valid){
       auth()
       .createUserWithEmailAndPassword(this.state.username, this.state.password)
-      .then(() => {
-        console.log('Utilisateur enregistré et authentifié !');
+      .then((userData) => {
+        console.log('Utilisateur enregistré et authentifié ! UID : '+userData.user.uid);
       })
       .catch(error => {
         if (error.code === 'auth/email-already-in-use') {

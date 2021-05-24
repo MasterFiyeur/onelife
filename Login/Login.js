@@ -30,9 +30,10 @@ export default class Login extends Component {
 
   loginVerif = () => {
     Keyboard.dismiss();
+    /* Enlever les espace lors de l'envoie du mail */
     if(this.state.username.trim() != "" && this.state.password.trim() != ""){
       auth()
-      .signInWithEmailAndPassword(this.state.username,this.state.password)
+      .signInWithEmailAndPassword(this.state.username.trim(),this.state.password)
       .then(() => {
         console.log("Authentifié !");
       })

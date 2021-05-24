@@ -12,6 +12,7 @@ import auth from '@react-native-firebase/auth';
 		les défis)
 		-> Pareil que Mes défis en non
 			clickable
+    Mdp oublié
 */
 
 export default class Home extends Component {

@@ -53,6 +53,12 @@ buck-out/
 .expo/
 web-build/
 
+# Firebase
+.firebaserc
+firestore.indexes.json
+firestore.rules
+firebase.json
+
 # Other
 /Chut
 /android/app/google-services.json
