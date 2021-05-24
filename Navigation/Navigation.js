@@ -4,7 +4,6 @@ import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import auth from '@react-native-firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 
 import Login from '../Login/Login';
 import Register from '../Login/Register';
@@ -104,6 +103,9 @@ export default function Navigation() {
         return subscriber; // unsubscribe on unmount
     }, []);
 
+    /* L'affichage dépend de {game} donc voir comment gerer les games
+    faire un listener de l'état de game du joueur
+    Peut-être pré-creer les games avec un id et création quand une avec joueur null */
     
     if (initializing) return <SplashScreen />;
 
