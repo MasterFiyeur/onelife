@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 import Login from '../Login/Login';
 import Register from '../Login/Register';
@@ -37,14 +38,16 @@ const AuthNavigation = () => {
     );
 };
 
-const ClassiqueNavigation = () => {
+const ClassiqueNavigation = (props) => {
   return(
-    <Stack.Navigator 
+    <Stack.Navigator
+      headerMode='none'
       screenOptions={{headerShown: false}}
       initialRouteName="home">
         <Stack.Screen 
           name="home" 
           component={Home}
+          initialParams={{game:props.game}}
         />
         <Stack.Screen 
           name="mesdefis" 
@@ -64,7 +67,7 @@ const ClassiqueNavigation = () => {
 
 const CreateNavigation = () => {
   return(
-    <Stack.Navigator 
+    <Stack.Navigator
       screenOptions={{headerShown: false}}
       initialRouteName="menu">
         <Stack.Screen
@@ -79,11 +82,44 @@ const CreateNavigation = () => {
     );
 }
 
+const SplashNavigation = (props) => {
+  <Stack.Navigator
+    screenOptions={{headerShown: false}}
+    initialRouteName="splash">
+      <Stack.Screen
+        name="splash"
+        component={SplashScreen}
+      />
+  </Stack.Navigator>
+
+}
+
 const AppNavigation = (props) => {
+    const [game, setGame] = useState(null);
+    const [load, setLoad] = useState(false);
+    
+    doAFunction = () => {
+      console.log("Yolo");
+      setGame({
+        mode:"classique",
+        user:[
+          {uid:12,name:"Theo"},
+          {uid:13,name:"Maxime"}
+        ]
+      });
+      setLoad(true);
+    }
+
+    if(!load) {
+      doAFunction();
+      return null;
+    }
     return(
-      props.game ? 
-        <ClassiqueNavigation /> : 
-        <CreateNavigation />
+      game ? 
+        (game.mode == "classique" ? <ClassiqueNavigation game={game}/> : 
+        <CreateNavigation />) :
+          <SplashScreen />
+        
     );
 };
 
@@ -91,7 +127,6 @@ export default function Navigation() {
 
     const [initializing, setInitializing] = useState(true);
     const [user, setUser] = useState();
-    const [game, setGame] = useState(null);
 
     function onAuthStateChanged(user) {
         setUser(user);
@@ -111,7 +146,7 @@ export default function Navigation() {
 
   return (
     <NavigationContainer>
-        {user ? <AppNavigation game={game} /> : <AuthNavigation />}
+        {user ? <AppNavigation /> : <AuthNavigation />}
     </NavigationContainer>
   );
 }
