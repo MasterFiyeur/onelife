@@ -45,9 +45,10 @@ const ClassiqueNavigation = (props) => {
       screenOptions={{headerShown: false}}
       initialRouteName="home">
         <Stack.Screen 
+          key={props.game.user.length}
           name="home" 
           component={Home}
-          initialParams={{game:props.game}}
+          initialParams={{props:props}}
         />
         <Stack.Screen 
           name="mesdefis" 
@@ -97,10 +98,12 @@ const SplashNavigation = (props) => {
 const AppNavigation = (props) => {
     const [game, setGame] = useState(null);
     const [load, setLoad] = useState(false);
+    const [cmpt, setCmpt] = useState(0);
     
     doAFunction = () => {
-      console.log("Yolo");
+      /* Experimental function */
       setGame({
+        key:1,
         mode:"classique",
         user:[
           {uid:12,name:"Theo"},
@@ -114,11 +117,27 @@ const AppNavigation = (props) => {
       doAFunction();
       return null;
     }
+
+    /* Experimental function */
+    if(load && cmpt == 0){
+      setTimeout(() => {
+        setGame({
+          key:game.key-1,
+          mode:"classique",
+          user:[...game.user,
+            {uid:15,name:"Lucas"}
+          ]
+        });
+        setCmpt(1);
+        clearTimeout();
+      }, 5000);
+    }
+    
     return(
       game ? 
-        (game.mode == "classique" ? <ClassiqueNavigation game={game}/> : 
+        (game.mode == "classique" ? <ClassiqueNavigation key={game.key} game={game} changeGame={(a) => {setGame(a)}}/> : 
         <CreateNavigation />) :
-          <SplashScreen />
+          <SplashScreen /> 
         
     );
 };

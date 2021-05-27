@@ -3,6 +3,11 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 import auth from '@react-native-firebase/auth';
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs([
+ 'Non-serializable values were found in the navigation state',
+]);
 
 
 /*
@@ -18,9 +23,14 @@ import auth from '@react-native-firebase/auth';
 export default class Home extends Component {
     constructor(props){
       super(props);
-      console.log(this.props.route.params.game);
+        this.state ={
+          game: this.props.route.params.props.game
+        };
     }
+
     render() {
+        /* Experimental console.log */
+        console.log("Child render : "+JSON.stringify(this.state.game));
         return (
         <LinearGradient
             colors={['#FF9200', '#FFEB00']}
