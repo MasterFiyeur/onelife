@@ -9,28 +9,15 @@ LogBox.ignoreLogs([
  'Non-serializable values were found in the navigation state',
 ]);
 
-
-/*
-	Mes défis (défi,points,check?)
-	Validation des défis
-	Classement (clique sur joueur pour voir
-		les défis)
-		-> Pareil que Mes défis en non
-			clickable
-    Mdp oublié
-*/
-
 export default class Home extends Component {
     constructor(props){
       super(props);
         this.state ={
-          game: this.props.route.params.props.game
+
         };
     }
 
     render() {
-        /* Experimental console.log */
-        console.log("Child render : "+JSON.stringify(this.state.game));
         return (
         <LinearGradient
             colors={['#FF9200', '#FFEB00']}
@@ -46,7 +33,7 @@ export default class Home extends Component {
                     size={30} 
                     color='rgb(255,255,255)'></Icon>
                 </TouchableOpacity>
-                <Text style={{fontSize:16}}>Partie : #12345</Text>
+                <Text style={{fontSize:16}}>Partie : Privée</Text>
                 <TouchableOpacity style={styles.inputIcon}>
                 <Icon 
                     name='settings-outline' 
@@ -57,17 +44,17 @@ export default class Home extends Component {
             <View style={styles.centerContainer}>
                 <TouchableOpacity
                     style={styles.btn}
-                    onPress={()=>{this.props.navigation.navigate('mesdefis')}}>
+                    onPress={()=>{this.props.changePage(1)}}>
                     <Text style={styles.text}>Mes défis</Text>
                 </TouchableOpacity>
                 <TouchableOpacity 
                     style={styles.btn}
-                    onPress={()=>{this.props.navigation.navigate('classement')}}>
+                    onPress={()=>{this.props.changePage(2)}}>
                     <Text style={styles.text}>Classement</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.btn}
-                    onPress={()=>{this.props.navigation.navigate('validation')}}>
+                    onPress={()=>{this.props.changePage(3)}}>
                     <Text style={styles.text}>Validation des défis</Text>
                 </TouchableOpacity>
             </View>

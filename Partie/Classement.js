@@ -75,7 +75,7 @@ export default class Classement extends Component {
             <View style={styles.topContainer}>
                 <TouchableOpacity
                     style={styles.inputIcon}
-                    onPress={() => {this.props.navigation.navigate('home');}}>
+                    onPress={() => {this.props.back();}}>
                 <Icon 
                     name='chevron-back' 
                     size={30}

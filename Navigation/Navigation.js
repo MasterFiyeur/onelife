@@ -14,6 +14,7 @@ import MesDefis from '../Partie/MesDefis';
 import Classement from '../Partie/Classement';
 import Validation from '../Partie/Validation';
 import SplashScreen from './SplashScreen';
+import ClassiqueNavigation from './ClassiqueNavigation';
 
 const Stack = createStackNavigator();
 
@@ -37,34 +38,6 @@ const AuthNavigation = () => {
         </Stack.Navigator>
     );
 };
-
-const ClassiqueNavigation = (props) => {
-  return(
-    <Stack.Navigator
-      headerMode='none'
-      screenOptions={{headerShown: false}}
-      initialRouteName="home">
-        <Stack.Screen 
-          key={props.game.user.length}
-          name="home" 
-          component={Home}
-          initialParams={{props:props}}
-        />
-        <Stack.Screen 
-          name="mesdefis" 
-          component={MesDefis}
-        />
-        <Stack.Screen 
-          name="classement" 
-          component={Classement}
-        />
-        <Stack.Screen 
-          name="validation" 
-          component={Validation}
-        />
-    </Stack.Navigator>
-    );
-}
 
 const CreateNavigation = () => {
   return(
@@ -115,30 +88,13 @@ const AppNavigation = (props) => {
 
     if(!load) {
       doAFunction();
-      return null;
-    }
-
-    /* Experimental function */
-    if(load && cmpt == 0){
-      setTimeout(() => {
-        setGame({
-          key:game.key-1,
-          mode:"classique",
-          user:[...game.user,
-            {uid:15,name:"Lucas"}
-          ]
-        });
-        setCmpt(1);
-        clearTimeout();
-      }, 5000);
     }
     
     return(
       game ? 
-        (game.mode == "classique" ? <ClassiqueNavigation key={game.key} game={game} changeGame={(a) => {setGame(a)}}/> : 
+        (game.mode == "classique" ? <ClassiqueNavigation key={game.key} /> : 
         <CreateNavigation />) :
           <SplashScreen /> 
-        
     );
 };
 
