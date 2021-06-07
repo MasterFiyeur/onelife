@@ -18,147 +18,147 @@ export default class MesDefis extends Component {
             {
                 label: "Avoir le snap/insta d'une meuf",
                 points: 1,
-                did: true
+                status: "waiting"
             },
             {
                 label: "Embrasser une personne en étant bourré",
                 points: 2,
-                did: false
+                status: "todo"
             },
             {
                 label: "Embrasser une personne en étant sobre",
                 points: 3,
-                did: true
+                status: "waiting"
             },
             {
                 label: "Faire un calin à un inconnue",
                 points: 4,
-                did: true
+                status: "did"
             },
             {
                 label: "Boire (en étant résonnable)",
                 points: 2,
-                did: false
+                status: "waiting"
             },
             {
                 label: "Boire à la bouteille (5 gorgées mini)",
                 points: 6,
-                did: false
+                status: "todo"
             },
             {
                 label: "Prendre 10 shot d'affilé",
                 points: 10,
-                did: false
+                status: "waiting"
             },
             {
                 label: "Prendre 20 shot d'affilé",
                 points: 20,
-                did: true
+                status: "did"
             },
             {
                 label: "Michto une meuf",
                 points: 20,
-                did: false
+                status: "waiting"
             },
             {
                 label: "Voler quelque chose",
                 points: 15,
-                did: true
+                status: "did"
             },
             {
                 label: "Date une meuf",
                 points: 25,
-                did: false
+                status: "todo"
             },
             {
                 label: "Faire/Recevoir un suçon à une inconnue",
                 points: 15,
-                did: true
+                status: "waiting"
             },
             {
                 label: "S'incruster dans un groupe",
                 points: 20,
-                did: true
+                status: "did"
             },
             {
                 label: "Choper le snap/insta de 10 meufs",
                 points: 10,
-                did: false
+                status: "waiting"
             },
             {
                 label: "Imiter une meuf pendant toute une soirée",
                 points: 15,
-                did: false
+                status: "todo"
             },
             {
                 label: "S'inventer une vie pour pécho une meuf",
                 points: 15,
-                did: true
+                status: "did"
             },
             {
                 label: "Prêter son sweat à une meuf",
                 points: 30,
-                did: true
+                status: "did"
             },
             {
                 label: "Revoir une meuf le lendemain d'une soirée où t'étais totalement arraché",
                 points: 30,
-                did: true
+                status: "did"
             },
             {
                 label: "Aller chez une inconnue",
                 points: 45,
-                did: true
+                status: "did"
             },
             {
                 label: "Remplir l'alphabet de la chope",
                 points: 50,
-                did: true
+                status: "waiting"
             },
             {
                 label: "Courir à poil sur 100m",
                 points: 30,
-                did: true
+                status: "did"
             },
             {
                 label: "Pisser dans la rue",
                 points: 5,
-                did: true
+                status: "did"
             },
             {
                 label: "Boire et finir arraché",
                 points: 20,
-                did: true
+                status: "did"
             },
             {
                 label: "Bain de minuit (à poil ou sous-vêtements)",
                 points: 60,
-                did: true
+                status: "did"
             },
             {
                 label: "Faire une fausse demande en mariage à une inconnue",
                 points: 15,
-                did: true
+                status: "did"
             },
             {
                 label: "Prendre une photo avec toutes les meufs que tu pécho",
                 points: 40,
-                did: true
+                status: "did"
             },
             {
                 label: "Faire des bails en extérieur",
                 points: 50,
-                did: true
+                status: "did"
             },
             {
                 label: "Plus que pécho une meuf (ken)",
                 points: 100,
-                did: true
+                status: "did"
             }
         ];
         let compt = 0;
         defis.forEach(element => {
-            compt += element.did?element.points:0;
+            compt += element.status=="did"?element.points:0;
         });
         this.setState({
             defis:defis,
@@ -168,15 +168,17 @@ export default class MesDefis extends Component {
 
     renderDefi = () => {
         return this.state.defis.map((defi) => {
+            /* TouchableOpacity if didn't did */
             return (
                 <TouchableOpacity key={this.state.defis.indexOf(defi)}>
                     <View style={styles.defi}>
                         <Text style={styles.label}>{defi.label}</Text>
                         <View style={styles.info}>
                             <Icon 
-                                name={defi.did?'checkmark-circle-outline':'close-circle-outline'}
+                                name={defi.status=="did"?'checkmark-circle-outline':
+                                    (defi.status=="waiting"?'hourglass-outline':'close-circle-outline')}
                                 size={30}
-                                color={defi.did?'lime':'red'}></Icon>
+                                color={defi.status=="did"?'lime':(defi.status=="waiting"?'orange':'red')}></Icon>
                             <Text>{defi.points} pts</Text>
                         </View>
                     </View>
