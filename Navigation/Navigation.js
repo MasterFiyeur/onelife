@@ -74,7 +74,7 @@ const AppNavigation = (props) => {
     const [cmpt, setCmpt] = useState(0);
     
     doAFunction = () => {
-      /* Experimental function */
+      /* Check firebase game of user */
       setGame({
         key:1,
         mode:"classique",

@@ -57,6 +57,11 @@ export default class Home extends Component {
                     onPress={()=>{this.props.changePage(3)}}>
                     <Text style={styles.text}>Validation des défis</Text>
                 </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.btn}
+                    onPress={()=>{this.props.update()}}>
+                    <Text style={styles.text}>Actualiser</Text>
+                </TouchableOpacity>
             </View>
             <View style={styles.topContainer}></View>
         </LinearGradient>

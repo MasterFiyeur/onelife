@@ -97,7 +97,8 @@ export default class Register extends Component {
             game: null,
             todo: null,
             did: null,
-            waiting: null
+            waiting: null,
+            points:0
           });
         }catch(error){
           console.log("Erreur lors de l'ajout de l'utilisateur à la base de donnée.");
