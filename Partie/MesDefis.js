@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
+import auth from '@react-native-firebase/auth';
 
 export default class MesDefis extends Component {
     constructor(props) {
@@ -11,151 +12,54 @@ export default class MesDefis extends Component {
           defis: [],
           total: 0
         };
+        this.getUser.bind(this);
+    }
+
+    getUser = (userUid) => {
+        if(this.props.users != null){
+            for (let index = 0; index < this.props.users.length; index++) {
+                if(this.props.users[index].id == userUid){return(this.props.users[index]);}
+            }
+        }
+        return(null);
+    }
+
+    idToDefi = (id) =>{
+        if(this.props.defis != null){
+            for (let index = 0; index < this.props.defis.length; index++) {
+                if(this.props.defis[index].id == id){return(this.props.defis[index]);}
+            }
+        }
+        return(null);
     }
 
     componentDidMount = () => {
-        const defis = [
-            {
-                label: "Avoir le snap/insta d'une meuf",
-                points: 1,
-                status: "waiting"
-            },
-            {
-                label: "Embrasser une personne en étant bourré",
-                points: 2,
-                status: "todo"
-            },
-            {
-                label: "Embrasser une personne en étant sobre",
-                points: 3,
-                status: "waiting"
-            },
-            {
-                label: "Faire un calin à un inconnue",
-                points: 4,
-                status: "did"
-            },
-            {
-                label: "Boire (en étant résonnable)",
-                points: 2,
-                status: "waiting"
-            },
-            {
-                label: "Boire à la bouteille (5 gorgées mini)",
-                points: 6,
-                status: "todo"
-            },
-            {
-                label: "Prendre 10 shot d'affilé",
-                points: 10,
-                status: "waiting"
-            },
-            {
-                label: "Prendre 20 shot d'affilé",
-                points: 20,
-                status: "did"
-            },
-            {
-                label: "Michto une meuf",
-                points: 20,
-                status: "waiting"
-            },
-            {
-                label: "Voler quelque chose",
-                points: 15,
-                status: "did"
-            },
-            {
-                label: "Date une meuf",
-                points: 25,
-                status: "todo"
-            },
-            {
-                label: "Faire/Recevoir un suçon à une inconnue",
-                points: 15,
-                status: "waiting"
-            },
-            {
-                label: "S'incruster dans un groupe",
-                points: 20,
-                status: "did"
-            },
-            {
-                label: "Choper le snap/insta de 10 meufs",
-                points: 10,
-                status: "waiting"
-            },
-            {
-                label: "Imiter une meuf pendant toute une soirée",
-                points: 15,
-                status: "todo"
-            },
-            {
-                label: "S'inventer une vie pour pécho une meuf",
-                points: 15,
-                status: "did"
-            },
-            {
-                label: "Prêter son sweat à une meuf",
-                points: 30,
-                status: "did"
-            },
-            {
-                label: "Revoir une meuf le lendemain d'une soirée où t'étais totalement arraché",
-                points: 30,
-                status: "did"
-            },
-            {
-                label: "Aller chez une inconnue",
-                points: 45,
-                status: "did"
-            },
-            {
-                label: "Remplir l'alphabet de la chope",
-                points: 50,
-                status: "waiting"
-            },
-            {
-                label: "Courir à poil sur 100m",
-                points: 30,
-                status: "did"
-            },
-            {
-                label: "Pisser dans la rue",
-                points: 5,
-                status: "did"
-            },
-            {
-                label: "Boire et finir arraché",
-                points: 20,
-                status: "did"
-            },
-            {
-                label: "Bain de minuit (à poil ou sous-vêtements)",
-                points: 60,
-                status: "did"
-            },
-            {
-                label: "Faire une fausse demande en mariage à une inconnue",
-                points: 15,
-                status: "did"
-            },
-            {
-                label: "Prendre une photo avec toutes les meufs que tu pécho",
-                points: 40,
-                status: "did"
-            },
-            {
-                label: "Faire des bails en extérieur",
-                points: 50,
-                status: "did"
-            },
-            {
-                label: "Plus que pécho une meuf (ken)",
-                points: 100,
-                status: "did"
-            }
-        ];
+        /* Creation of defis tab */
+        let defis = [];
+        let defi = null;
+        let user = this.getUser(this.props.player=="self"?auth().currentUser.uid:this.props.player);
+        if(user == null){this.props.back();return;}
+        if(user.todo != null){
+            user.todo.forEach(element =>{
+                defi = this.idToDefi(element);
+                defis.push({label:defi.label,points:defi.points,status:"todo"});
+            });
+        }
+        if(user.did != null){
+            user.did.forEach(element =>{
+                defi = this.idToDefi(element);
+                defis.push({label:defi.label,points:defi.points,status:"did"});
+            });
+        }
+        if(user.waiting != null){
+            user.waiting.forEach(element =>{
+                defi = this.idToDefi(element);
+                defis.push({label:defi.label,points:defi.points,status:"waiting"});
+            });
+        }
+        /* sort the array */
+
+
         let compt = 0;
         defis.forEach(element => {
             compt += element.status=="did"?element.points:0;
@@ -163,12 +67,13 @@ export default class MesDefis extends Component {
         this.setState({
             defis:defis,
             total:compt
-        })
+        });
     }
 
     renderDefi = () => {
         return this.state.defis.map((defi) => {
             /* TouchableOpacity if didn't did */
+            if(defi==null){return;}
             return (
                 <TouchableOpacity key={this.state.defis.indexOf(defi)}>
                     <View style={styles.defi}>
