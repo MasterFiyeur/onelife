@@ -1,20 +1,26 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
 import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 
 export default class MesDefis extends Component {
     constructor(props) {
         super(props);
         this.state = {
           defis: [],
+          user: null,
           total: 0
         };
         this.getUser.bind(this);
+        this.idToDefi.bind(this);
+        this.indexOfDefi.bind(this);
+        this.todoToWaiting.bind(this);
     }
 
+    /* Renvoi un user par rapport à son uid */
     getUser = (userUid) => {
         if(this.props.users != null){
             for (let index = 0; index < this.props.users.length; index++) {
@@ -24,13 +30,59 @@ export default class MesDefis extends Component {
         return(null);
     }
 
-    idToDefi = (id) =>{
+    /* Renvoie un défi par rapport à son id */
+    idToDefi = (id) => {
         if(this.props.defis != null){
             for (let index = 0; index < this.props.defis.length; index++) {
                 if(this.props.defis[index].id == id){return(this.props.defis[index]);}
             }
         }
         return(null);
+    }
+
+    indexOfDefi = (tab,id) => {
+        console.log(id);
+        for (let index = 0; index < tab.length; index++) {
+            if(tab[index] == id){return(index);}            
+        }
+        return(-1);
+    }
+
+    todoToWaiting = (defi_id) => {
+        let user = this.getUser(this.props.player=="self"?auth().currentUser.uid:this.props.player);
+        let newTodo = [];
+        let newWaiting = user.waiting==null?[]:user.waiting;
+        newWaiting.push(defi_id);
+        newTodo = user.todo;
+        let indexDel = this.indexOfDefi(newTodo,defi_id);
+        if(indexDel==-1){alert("Erreur : [MesDefis->todoToWaiting] Défi non trouvé !");}
+        newTodo.splice(newTodo.indexOf(defi_id),1);
+        firestore()
+            .collection('users')
+            .doc(user.id)
+            .update({
+                todo:newTodo,
+                waiting:newWaiting
+            })
+            .then(() => {
+                console.log('User updated!');
+                this.props.update();
+            });
+    }
+
+    onClickDefi = (defi_id,label) => {
+        Alert.alert(
+            "Défi réalisé",
+            "Souhaitez-vous demander la validation de ce défi : "+label+" ?",
+            [
+              {
+                text: "Non",
+                onPress: () => console.log("Pardon"),
+                style: "cancel"
+              },
+              { text: "Oui", onPress: () => this.todoToWaiting(defi_id) }
+            ]
+          );
     }
 
     componentDidMount = () => {
@@ -42,23 +94,23 @@ export default class MesDefis extends Component {
         if(user.todo != null){
             user.todo.forEach(element =>{
                 defi = this.idToDefi(element);
-                defis.push({label:defi.label,points:defi.points,status:"todo"});
+                defis.push({id:element,label:defi.label,points:defi.points,status:"todo"});
             });
         }
         if(user.did != null){
             user.did.forEach(element =>{
                 defi = this.idToDefi(element);
-                defis.push({label:defi.label,points:defi.points,status:"did"});
+                defis.push({id:element,label:defi.label,points:defi.points,status:"did"});
             });
         }
         if(user.waiting != null){
             user.waiting.forEach(element =>{
                 defi = this.idToDefi(element);
-                defis.push({label:defi.label,points:defi.points,status:"waiting"});
+                defis.push({id:element,label:defi.label,points:defi.points,status:"waiting"});
             });
         }
         /* sort the array */
-
+        defis.sort((a,b)=>{return(a.points-b.points)});
 
         let compt = 0;
         defis.forEach(element => {
@@ -66,17 +118,38 @@ export default class MesDefis extends Component {
         });
         this.setState({
             defis:defis,
+            user:user,
             total:compt
         });
     }
+
+
 
     renderDefi = () => {
         return this.state.defis.map((defi) => {
             /* TouchableOpacity if didn't did */
             if(defi==null){return;}
-            return (
-                <TouchableOpacity key={this.state.defis.indexOf(defi)}>
-                    <View style={styles.defi}>
+            if(defi.status=="todo" && this.props.player=="self"){
+                return (
+                    <TouchableOpacity 
+                        key={this.state.defis.indexOf(defi)}
+                        onPress={() => this.onClickDefi(defi.id,defi.label)}>
+                        <View style={styles.defi}>
+                            <Text style={styles.label}>{defi.label}</Text>
+                            <View style={styles.info}>
+                                <Icon 
+                                    name='close-circle-outline'
+                                    size={30}
+                                    color='red'></Icon>
+                                <Text>{defi.points} pts</Text>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                );
+            }else{
+                return (
+                    <View style={styles.defi} 
+                    key={this.state.defis.indexOf(defi)}>
                         <Text style={styles.label}>{defi.label}</Text>
                         <View style={styles.info}>
                             <Icon 
@@ -87,8 +160,8 @@ export default class MesDefis extends Component {
                             <Text>{defi.points} pts</Text>
                         </View>
                     </View>
-                </TouchableOpacity>
-            );
+                );
+            }
         });
     }
 

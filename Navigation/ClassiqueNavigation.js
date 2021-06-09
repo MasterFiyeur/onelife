@@ -20,6 +20,26 @@ export default class ClassiqueNavigation extends Component {
         this.actualisation.bind(this);
     }
 
+
+    /* ----- To reset my challenges -----
+    let theTab = [];
+    for (let index = 0; index < state_defis.length; index++) {
+        const element = state_defis[index];
+        theTab.push(element.id);
+    }
+
+    firestore()
+        .collection('users')
+        .doc("P7hITehYZ4b2Iq5xU1JTp08dakU2")
+        .update({
+            todo:theTab,
+            waiting:null
+        })
+        .then(() => {
+            console.log('User updated!');
+            console.log(state_users);
+        });*/
+
     actualisation = async () => {
         /* Loading */
         this.setState({page:-1});
@@ -35,7 +55,7 @@ export default class ClassiqueNavigation extends Component {
         let state_users = [];
         users.forEach(function(doc) {
             let data = doc.data();
-            state_users.push({id:doc.id,name:data.name,points:data.points,todo:data.todo,did:data.did,waiting:data.waiting});
+            state_users.push({id:doc.id,game:data.game,name:data.name,points:data.points,todo:data.todo,did:data.did,waiting:data.waiting});
         });
         /* Updating state */
         this.setState({
@@ -61,7 +81,7 @@ export default class ClassiqueNavigation extends Component {
     render() {
         switch (this.state.page) {
             case 1:
-                return <MesDefis users={this.state.users} defis={this.state.defis} back={() => {this.navigatePage(0)}} player={"self"}/>
+                return <MesDefis users={this.state.users} defis={this.state.defis} back={() => {this.navigatePage(0)}} player={"self"} update={() => {this.actualisation()}}/>
                 break;
             case 2:
                 return <Classement users={this.state.users} defis={this.state.defis} back={() => {this.navigatePage(0)}}/>
