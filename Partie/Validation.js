@@ -1,29 +1,132 @@
 import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, Alert } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import SplashScreen from '../Navigation/SplashScreen';
 
 export default class Validation extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        defis: []
+        defis: [],
+        loading:false
       };
+      this.onRefuse.bind(this);
+      this.onAccept.bind(this);
+      this.idToDefi.bind(this);
+    }
+
+    waitingToTodo = async (defi) =>{
+      this.setState({loading:true});
+      const user = await firestore().collection('users').doc(defi.joueurId).get();
+      let userData = user.data();
+      let newWaiting = [];
+      if(userData.waiting.length<=1){newWaiting==null}
+      else{
+        for (let index = 0; index < userData.waiting.length; index++) {
+          if(userData.waiting[index]!=defi.id){newWaiting.push(userData.waiting[index]);}          
+        }
+      }
+      let newTodo = userData.todo==null?[]:userData.todo;
+      newTodo.push(defi.id);
+      firestore()
+        .collection('users')
+        .doc(defi.joueurId)
+        .update({
+          todo: newTodo,
+          waiting: newWaiting
+        })
+        .then(() => {
+          console.log('User updated!');
+          this.props.update(3);
+        });
+    }
+
+    waitingToDid = async (defi) =>{
+      this.setState({loading:true});
+      const user = await firestore().collection('users').doc(defi.joueurId).get();
+      let userData = user.data();
+      let newWaiting = [];
+      if(userData.waiting.length<=1){newWaiting==null}
+      else{
+        for (let index = 0; index < userData.waiting.length; index++) {
+          if(userData.waiting[index]!=defi.id){newWaiting.push(userData.waiting[index]);}          
+        }
+      }
+      let newDid = userData.did==null?[]:userData.did;
+      newDid.push(defi.id);
+      firestore()
+        .collection('users')
+        .doc(defi.joueurId)
+        .update({
+          did: newDid,
+          waiting: newWaiting
+        })
+        .then(() => {
+          console.log('User updated!');
+          this.props.update(3);
+        });
+    }
+
+
+    /* Deny a defi */
+    onRefuse = (defi) => {
+      Alert.alert(
+          "Refus de défi",
+          "Souhaitez-vous refuser le defi de "+defi.joueur+" : "+defi.defi+" ?",
+          [
+            {
+              text: "Non",
+              onPress: () => console.log("Non"),
+              style: "cancel"
+            },
+            { text: "Oui", onPress: () => this.waitingToTodo(defi) }
+          ]
+      );
+    }
+
+    /* Accept a defi */
+    onAccept = (defi) => {
+      Alert.alert(
+          "Validation de défi",
+          "Souhaitez-vous valider le defi de "+defi.joueur+" : "+defi.defi+" ?",
+          [
+            {
+              text: "Non",
+              onPress: () => console.log("Non"),
+              style: "cancel"
+            },
+            { text: "Oui", onPress: () => this.waitingToDid(defi)}
+          ]
+      );
+    }
+
+    /* Renvoie un défi par rapport à son id */
+    idToDefi = (id) => {
+      if(this.props.defis != null){
+        for (let index = 0; index < this.props.defis.length; index++) {
+          if(this.props.defis[index].id == id){return(this.props.defis[index]);}
+        }
+      }
+      return(null);
     }
 
     componentDidMount(){
-      const defis = [
-        {
-          joueur:'Matys',
-          defi:"Revoir une meuf le lendemain d'une soirée où t'étais totalement arraché"
-        },{
-          joueur:'Théo',
-          defi:"S'inventer une vie pour pécho une meuf"
-        },{
-          joueur:'Maxime',
-          defi:"Courir à poil sur 100m"
+      let myUid = auth().currentUser.uid;
+      let defis = [];
+      let defiInfo, defi;
+      this.props.users.forEach(user =>{
+        if(user.waiting!=null && user.id!=myUid){
+          for (let index = 0; index < user.waiting.length; index++) {
+            defi = user.waiting[index];
+            defiInfo = this.idToDefi(defi);
+            if(defiInfo == null){return;}
+            defis.push({joueurId:user.id,joueur:user.name,defi:defiInfo.label,id:defi});
+          }
         }
-      ];
+      });
       this.setState({
         defis: defis
       });
@@ -36,8 +139,10 @@ export default class Validation extends Component {
       return this.state.defis.map((validation) => {
           return (
             <View style={styles.valid} key={this.state.defis.indexOf(validation)}>
-                      <TouchableOpacity style={styles.react}>
-                          <Icon 
+                      <TouchableOpacity 
+                        style={styles.react}
+                        onPress={() => {this.onAccept(validation)}}>
+                          <Icon
                               name='checkbox' 
                               size={25}
                               color='lime'></Icon>
@@ -47,7 +152,9 @@ export default class Validation extends Component {
                           <Text style={styles.defi}>{validation.defi}</Text>
                           <Text style={styles.nom}>{validation.joueur}</Text>
                       </View>
-                      <TouchableOpacity style={styles.react}>
+                      <TouchableOpacity 
+                        style={styles.react}
+                        onPress={() => {this.onRefuse(validation)}}>
                           <Icon 
                               name='hand-left' 
                               size={25}
@@ -60,6 +167,8 @@ export default class Validation extends Component {
     }
     
     render() {
+      if(this.state.loading){return(<SplashScreen />)}
+      else{
         return (
           <LinearGradient
           colors={['#FF9200', '#FFEB00']}
@@ -94,6 +203,7 @@ export default class Validation extends Component {
           </View>
         </LinearGradient>
         )
+      }
     }
 }
 

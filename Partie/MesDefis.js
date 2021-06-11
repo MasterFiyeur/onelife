@@ -57,6 +57,7 @@ export default class MesDefis extends Component {
         let indexDel = this.indexOfDefi(newTodo,defi_id);
         if(indexDel==-1){alert("Erreur : [MesDefis->todoToWaiting] Défi non trouvé !");}
         newTodo.splice(newTodo.indexOf(defi_id),1);
+        if(newTodo.length<=0){newTodo=null;}
         firestore()
             .collection('users')
             .doc(user.id)
@@ -66,7 +67,7 @@ export default class MesDefis extends Component {
             })
             .then(() => {
                 console.log('User updated!');
-                this.props.update();
+                this.props.update(1);
             });
     }
 
@@ -77,12 +78,12 @@ export default class MesDefis extends Component {
             [
               {
                 text: "Non",
-                onPress: () => console.log("Pardon"),
+                onPress: () => console.log("Non"),
                 style: "cancel"
               },
               { text: "Oui", onPress: () => this.todoToWaiting(defi_id) }
             ]
-          );
+        );
     }
 
     componentDidMount = () => {

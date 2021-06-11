@@ -59,7 +59,7 @@ export default class Home extends Component {
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.btn}
-                    onPress={()=>{this.props.update()}}>
+                    onPress={()=>{this.props.update(0)}}>
                     <Text style={styles.text}>Actualiser</Text>
                 </TouchableOpacity>
             </View>
