@@ -20,6 +20,13 @@ export default class ClassiqueNavigation extends Component {
         this.actualisation.bind(this);
     }
 
+    /* TODO :
+        - count points of player when validating a defi
+        - loader when waiting firebase
+        - game create and join
+        - add name in register without special char
+        - make an admin panel
+    */
 
     /* ----- To reset my challenges -----
     let theTab = [];
