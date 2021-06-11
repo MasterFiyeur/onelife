@@ -84,7 +84,7 @@ export default class ClassiqueNavigation extends Component {
                 return <MesDefis users={this.state.users} defis={this.state.defis} back={() => {this.navigatePage(0)}} player={"self"} update={() => {this.actualisation()}}/>
                 break;
             case 2:
-                return <Classement users={this.state.users} defis={this.state.defis} back={() => {this.navigatePage(0)}}/>
+                return <Classement users={this.state.users} defis={this.state.defis} back={(page) => {this.navigatePage(page)}} />
                 break;
             case 3:
                 return <Validation users={this.state.users} defis={this.state.defis} back={() => {this.navigatePage(0)}}/>
@@ -95,7 +95,6 @@ export default class ClassiqueNavigation extends Component {
             default:
                 return <Home users={this.state.users} changePage={(page) => {this.navigatePage(page)}} update={() => {this.actualisation()}}/>
                 break;
-            /* Add case -1 for initialisation of defis and users */
             /* Add function "actualise" which is call everytime that the state is 0 (home)*/
         }
     }

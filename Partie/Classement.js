@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import Icon from 'react-native-vector-icons/Ionicons';
+import MesDefis from '../Partie/MesDefis';
 
 export default class Classement extends Component {
     constructor(props) {
       super(props);
       this.state = {
-        joueur: []
+        joueur: [],
+        show:null
       };
     }
 
@@ -34,8 +36,9 @@ export default class Classement extends Component {
         }
       ];
       this.setState({
-        joueur:tab
+        joueur:this.props.users
       });
+      console.log(this.props.users);
     }
 
     renderTrophy = (place) => {
@@ -54,10 +57,12 @@ export default class Classement extends Component {
     renderJoueur = () => {
       return this.state.joueur.map((joueur) => {
           return (
-            <TouchableOpacity key={this.state.joueur.indexOf(joueur)}>
+            <TouchableOpacity 
+              key={this.state.joueur.indexOf(joueur)}
+              onPress={() => {this.setState({show:joueur.id})}}>
                 <View style={styles.player}>
                     {this.renderTrophy(this.state.joueur.indexOf(joueur))}
-                    <Text style={styles.label}>{joueur.nom}</Text>
+                    <Text style={styles.label}>{joueur.name}</Text>
                     <Text style={styles.points}>{joueur.points} pts</Text>
                 </View>
             </TouchableOpacity>
@@ -65,40 +70,48 @@ export default class Classement extends Component {
       });
     }
 
+    mesDefisBack = () => {
+      this.setState({show:null});
+    }
+
     render() {
-        return (
-            <LinearGradient
-                colors={['#FF9200', '#FFEB00']}
-                style={styles.backgroundContainer}>
-            <View style={styles.rond}></View>
-            <View style={styles.rond2}></View>
-            <View style={styles.topContainer}>
-                <TouchableOpacity
-                    style={styles.inputIcon}
-                    onPress={() => {this.props.back();}}>
-                <Icon 
-                    name='chevron-back' 
-                    size={30}
-                    color='rgb(255,255,255)'></Icon>
-                </TouchableOpacity>
-                <Text style={styles.title}>Classement</Text>
-                <TouchableOpacity style={styles.inputIcon}>
-                <Icon 
-                    name='settings-outline' 
-                    size={30} 
-                    color='rgb(255,255,255)'></Icon>
-                </TouchableOpacity>
-            </View>
-            <View style={styles.centerContainer}>
-                <ScrollView 
-                    contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
-                    style={styles.scrollView}>
-                  {this.renderJoueur()}
-                </ScrollView>
-            </View>
-        <View style={styles.topContainer}></View>
-        </LinearGradient>
-        )
+        if(this.state.show!=null){
+          return(<MesDefis users={this.props.users} defis={this.props.defis} back={() => {this.mesDefisBack()}} player={this.state.show} />);
+        }else{
+          return (
+              <LinearGradient
+                  colors={['#FF9200', '#FFEB00']}
+                  style={styles.backgroundContainer}>
+              <View style={styles.rond}></View>
+              <View style={styles.rond2}></View>
+              <View style={styles.topContainer}>
+                  <TouchableOpacity
+                      style={styles.inputIcon}
+                      onPress={() => {this.props.back(0);}}>
+                  <Icon 
+                      name='chevron-back' 
+                      size={30}
+                      color='rgb(255,255,255)'></Icon>
+                  </TouchableOpacity>
+                  <Text style={styles.title}>Classement</Text>
+                  <TouchableOpacity style={styles.inputIcon}>
+                  <Icon 
+                      name='settings-outline' 
+                      size={30} 
+                      color='rgb(255,255,255)'></Icon>
+                  </TouchableOpacity>
+              </View>
+              <View style={styles.centerContainer}>
+                  <ScrollView 
+                      contentContainerStyle={{ flexGrow: 1, justifyContent: 'center' }}
+                      style={styles.scrollView}>
+                    {this.renderJoueur()}
+                  </ScrollView>
+              </View>
+          <View style={styles.topContainer}></View>
+          </LinearGradient>
+          )
+        }
     }
 }
 
