@@ -57,10 +57,16 @@ export default class Validation extends Component {
       }
       let newDid = userData.did==null?[]:userData.did;
       newDid.push(defi.id);
+      let defiPoints,compt = 0;
+      newDid.forEach(element => {
+        defiPoints = this.idToDefi(element);
+        compt += defiPoints.points;
+      });
       firestore()
         .collection('users')
         .doc(defi.joueurId)
         .update({
+          points: compt,
           did: newDid,
           waiting: newWaiting
         })

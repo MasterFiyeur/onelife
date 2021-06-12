@@ -21,7 +21,6 @@ export default class ClassiqueNavigation extends Component {
     }
 
     /* TODO :
-        - count points of player when validating a defi
         - loader when waiting firebase
         - game create and join
         - add name in register without special char
